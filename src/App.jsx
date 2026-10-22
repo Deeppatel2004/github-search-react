@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useFetch } from "./hooks/useFetch";
 import { fetchUser } from "./api";
 import {
   isValidUser,
@@ -33,9 +34,10 @@ export default function App() {
 
       setUser(pickUser(data));
       setRecent(previous => addRecent(previous, trimmedName));
-    } catch (err) {
-      setError(errorFor(err));
-    } finally {
+    } catch (error) {
+  setError(errorFor(error));
+}
+ finally {
       setLoading(false);
     }
   }
