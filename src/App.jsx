@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { useFetch } from "./hooks/useFetch";
+import { useLocalStorage } from "./hooks/useLocalStorage";
 import { fetchUser } from "./api";
 import {
   isValidUser,
   pickUser,
+  toStatus,
   errorFor,
   addRecent
 } from "./helpers";
@@ -18,7 +19,7 @@ export default function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [recent, setRecent] = useState([]);
+  const [recent, setRecent] = useLocalStorage("recent-searches", []);
 
   async function searchUser(username) {
     const trimmedName = username.trim();
@@ -35,9 +36,8 @@ export default function App() {
       setUser(pickUser(data));
       setRecent(previous => addRecent(previous, trimmedName));
     } catch (error) {
-  setError(errorFor(error));
-}
- finally {
+      setError(errorFor(toStatus(error)));
+    } finally {
       setLoading(false);
     }
   }
